@@ -18,4 +18,10 @@
 
 ---
 
-# List of Boards
+# Supported boards
+
+_Support by using the referral link below to purchase the board 🛍️ !_
+
+|No | Thumb | 🛍️ Board |  Video |
+|--|--|--|--|
+01| <img src="Elements/01-Waveshare Speaker Box Smart Voice Assistant Home Assistant + ESPHome + LVGL.jpg" width="250"/>| [WS Speaker Box](https://s.click.aliexpress.com/e/_on41Aqd) | https://youtu.be/B2EGNjgpsFw |

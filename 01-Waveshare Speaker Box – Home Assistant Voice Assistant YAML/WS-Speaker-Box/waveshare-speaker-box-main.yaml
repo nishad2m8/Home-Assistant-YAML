@@ -1,0 +1,96 @@
+packages:
+  voice: !include waveshare-speaker-box-voice.yaml
+
+lvgl:
+  pages:
+    - id: main_page
+      bg_color: 0x000000
+      widgets:
+        - animimg:
+            id: state_anim
+            x: 0
+            y: 0
+            align: CENTER
+            src: [idle_01, idle_02]
+            duration: 1000ms
+            repeat_count: forever
+
+image:
+  # Idle images   
+  - file: 'WS-Speaker-Box/Assets/idle-01.png'
+    id: idle_01
+    type: rgb565
+    resize: 150x150
+    transparency: alpha_channel
+  - file: 'WS-Speaker-Box/Assets/idle-02.png'
+    id: idle_02
+    type: rgb565
+    resize: 150x150
+    transparency: alpha_channel
+  # - file: 'WS-Speaker-Box/Assets/idle-03.png'
+  #   id: idle_03
+  #   type: rgb565
+  #   resize: 150x150
+
+  # Listening images
+  - file: 'WS-Speaker-Box/Assets/listening-01.png'
+    id: listening_01
+    type: rgb565
+    resize: 150x150
+    transparency: alpha_channel
+  - file: 'WS-Speaker-Box/Assets/listening-02.png'
+    id: listening_02
+    type: rgb565
+    resize: 150x150
+    transparency: alpha_channel
+
+  # Responding images
+  - file: 'WS-Speaker-Box/Assets/responding-01.png'
+    id: responding_01
+    type: rgb565
+    resize: 150x150
+    transparency: alpha_channel
+  - file: 'WS-Speaker-Box/Assets/responding-02.png'
+    id: responding_02
+    type: rgb565
+    resize: 150x150
+    transparency: alpha_channel
+
+
+# Link HA Assist Satellite state → LVGL animimg animation
+text_sensor:
+  - platform: homeassistant
+    id: assist_state
+    entity_id: assist_satellite.waveshare_speaker_box_assist_satellite
+    on_value:
+      then:
+        # Check for the "listening" state
+        - if:
+            condition:
+              lambda: 'return x == "listening";'
+            then:
+              - lvgl.animimg.update:
+                  id: state_anim
+                  src: [listening_01, listening_02]
+                  duration: 500ms
+                  repeat_count: forever
+        # Check for the "responding" state
+        - if:
+            condition:
+              lambda: 'return x == "responding";'
+            then:
+              - lvgl.animimg.update:
+                  id: state_anim
+                  src: [responding_01, responding_02]
+                  duration: 750ms
+                  repeat_count: forever
+        # Handle the default "idle" state
+        - if:
+            condition:
+              lambda: 'return x == "idle";'
+            then:
+              - lvgl.animimg.update:
+                  id: state_anim
+                  src: [idle_01, idle_02]
+                  duration: 1000ms
+                  repeat_count: forever
