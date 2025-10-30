@@ -44,7 +44,7 @@ _Support by using the referral link below to purchase the board 🛍️ !_
 
 |No | Thumb | 🛍️ Board |  Video |
 |--|--|--|--|
-01 |  <img src="Elements/01-M5Stack Cardputer ADV.png" width="150"/> | [CardPuter ADV](https://s.click.aliexpress.com/e/_c3stnEVZ)  | 🚧 |
+01 |  <img src="Elements/01-M5Stack Cardputer ADV.png" width="250"/> | [CardPuter ADV](https://s.click.aliexpress.com/e/_c3stnEVZ)  | 🚧 |
 
 </details>
 
