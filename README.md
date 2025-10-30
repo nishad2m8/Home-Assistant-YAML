@@ -16,12 +16,35 @@
   </a>
 </p>
 
+
 ---
 
 # Supported boards
 
 _Support by using the referral link below to purchase the board 🛍️ !_
 
+<img src="Elements/WaveShare.png" height="50" /> 
+
+<details>
+  <summary><strong>WaveShare Boards (click to expand)</strong></summary>
+
 |No | Thumb | 🛍️ Board |  Video |
 |--|--|--|--|
 01| <img src="Elements/01-Waveshare Speaker Box Smart Voice Assistant Home Assistant + ESPHome + LVGL.jpg" width="250"/>| [WS Speaker Box](https://s.click.aliexpress.com/e/_on41Aqd) | https://youtu.be/B2EGNjgpsFw |
+02 | <img src="Elements/02-WaveShare ESP32 P4 Smart 86 Box.jpg" width="250"/> | [WS ESP32 P4 Smart 86 Box](https://s.click.aliexpress.com/e/_onZNGBp) |https://youtu.be/s3PCJ3zLQ0k |
+
+</details>
+
+---
+
+<img src="Elements/M5Stack.png" height="100" /> 
+
+<details>
+  <summary><strong>WaveShare Boards (click to expand)</strong></summary>
+
+|No | Thumb | 🛍️ Board |  Video |
+|--|--|--|--|
+01 |  <img src="Elements/01-M5Stack Cardputer ADV.png" width="150"/> | [CardPuter ADV](https://s.click.aliexpress.com/e/_c3stnEVZ)  | 🚧 |
+
+</details>
+

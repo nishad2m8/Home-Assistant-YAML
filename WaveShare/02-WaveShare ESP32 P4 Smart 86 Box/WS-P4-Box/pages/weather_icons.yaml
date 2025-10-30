@@ -1,0 +1,182 @@
+image:   
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/blizzard.png'
+      id: blizzard
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/blowing_snow.png'
+      id: blowing_snow
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/clear_night.png'
+      id: clear_night
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/cloudy.png'
+      id: cloudy
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/drizzle.png'
+      id: drizzle
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/flurries.png'
+      id: flurries
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/haze_fog_dust_smoke.png'
+      id: haze_fog_dust_smoke
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/heavy_rain.png'
+      id: heavy_rain
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/heavy_snow.png'
+      id: heavy_snow
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/isolated_scattered_tstorms_day.png'
+      id: isolated_scattered_tstorms_day
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/isolated_scattered_tstorms_night.png'
+      id: isolated_scattered_tstorms_night
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/mostly_clear_night.png'
+      id: mostly_clear_night
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/mostly_cloudy_day.png'
+      id: mostly_cloudy_day
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/mostly_cloudy_night.png'
+      id: mostly_cloudy_night
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/mostly_sunny.png'
+      id: mostly_sunny
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/partly_cloudy.png'
+      id: partly_cloudy
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/partly_cloudy_night.png'
+      id: partly_cloudy_night
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/scattered_showers_day.png'
+      id: scattered_showers_day
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/scattered_showers_night.png'
+      id: scattered_showers_night
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/showers_rain.png'
+      id: showers_rain
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/sleet_hail.png'
+      id: sleet_hail
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/snow_showers_snow.png'
+      id: snow_showers_snow
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/strong_tstorms.png'
+      id: strong_tstorms
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/sunny.png'
+      id: sunny
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/tornado.png'
+      id: tornado
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/weather_icons/wintry_mix_rain_snow.png'
+      id: wintry_mix_rain_snow
+      type: rgb565
+      resize: 100x100
+      transparency: alpha_channel
+      byte_order: little_endian

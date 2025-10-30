@@ -1,0 +1,178 @@
+# file: cardputer_adv_main.yaml
+
+packages:
+
+substitutions:
+  name: cardputer-adv
+  friendly_name: Cardputer-Adv
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: arduino
+
+logger:
+
+api:
+  # encryption:
+  #   key: !secret api_key
+
+ota:
+  - platform: esphome
+    # password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "${friendly_name} Fallback AP"
+    # password: "cardputeradv"
+
+captive_portal:
+
+# I2C bus (shared by ES8311 audio codec, BMI270 IMU, TCA8418 keyboard controller)
+# Cardputer-Adv pins: SDA=G8, SCL=G9
+i2c:
+  id: bus0
+  sda: GPIO8
+  scl: GPIO9
+  frequency: 400kHz
+  scan: true
+
+# SPI for LCD (no MISO)
+spi:
+  - id: spi_lcd
+    clk_pin: GPIO36
+    mosi_pin: GPIO35
+
+# Font for the on-device UI
+font:
+  - file: "gfonts://Roboto"
+    id: roboto_16
+    size: 16
+  - file: "gfonts://Roboto"
+    id: roboto_12
+    size: 12
+
+# Battery ADC on G10 (per M5 docs). Adjust the multiply factor to calibrate.
+sensor:
+  - platform: adc
+    id: bat_raw
+    name: "${friendly_name} Battery (raw)"
+    pin: GPIO10
+    attenuation: 12db
+    update_interval: 30s
+    accuracy_decimals: 3
+
+  - platform: template
+    id: bat_voltage
+    name: "${friendly_name} Battery Voltage"
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: 30s
+    lambda: |-
+      const float SCALE = 2.20;
+      return id(bat_raw).state * SCALE;
+    on_value:
+      then:
+        - lvgl.label.update:
+            id: lbl_batt
+            text:
+              format: "Batt: %.2f V"
+              args: [ 'id(bat_voltage).state' ]
+
+
+# --- SINGLE binary_sensor BLOCK (merged) ---
+binary_sensor:
+  - platform: status
+    id: api_connected
+    name: "${friendly_name} Status"
+    on_state:
+      then:
+        - if:
+            condition:
+              binary_sensor.is_on: api_connected
+            then:
+              - lvgl.label.update:
+                  id: lbl_status
+                  text: "Online"
+                  text_color: 0x00FF00
+            else:
+              - lvgl.label.update:
+                  id: lbl_status
+                  text: "Offline"
+                  text_color: 0xFF0000
+
+  # (keep your keyboard_int entry as-is)
+  - platform: gpio
+    id: keyboard_int
+    name: "${friendly_name} Keyboard Event"
+    pin:
+      number: GPIO11
+      mode:
+        input: true
+        pullup: true
+    filters:
+      - delayed_off: 50ms
+
+# ST7789V2 240x135 on Cardputer-Adv (G35 MOSI, G36 SCK, G37 CS, G34 DC/RS, G33 RST, G38 BL)
+display:
+  - platform: mipi_spi
+    id: tft
+    model: ST7789V
+    spi_id: spi_lcd
+    cs_pin: GPIO37
+    dc_pin: GPIO34
+    reset_pin: GPIO33
+    dimensions:
+      width: 240
+      height: 135
+      offset_width: 40        # ← try 40 first (fixes left-noise on many ST7789V2)
+      offset_height: 53       # 54
+    rotation: 90              # upright on Cardputer-Adv
+    color_order: bgr          # ← if colors look wrong, try bgr or set invert_colors: true
+    invert_colors: true       # false
+    spi_mode: MODE3           # many ST7789(V2) panels need MODE3 to avoid artifacts
+    data_rate: 8MHz           # start safe; you can bump to 12–20 MHz if clean
+    # draw_rounding: 4          # aligns updates to 4px boundaries (reduces edge noise)
+    auto_clear_enabled: false # required when using LVGL
+    update_interval: never
+
+lvgl:
+  - id: devices_page
+    bg_color: 0xff0000
+    widgets:
+      - label:
+          id: lbl_status
+          align: TOP_LEFT
+          x: 4
+          y: 4
+          text: "Booting…"
+          text_color: 0xFFFFFF
+      - label:
+          id: lbl_batt
+          align: TOP_LEFT
+          x: 4
+          y: 24
+          text: "Batt: --.- V"
+          text_color: 0xFFFFFF
+
+output:
+  - platform: ledc
+    id: bl_pwm
+    pin: GPIO38
+    frequency: 1000 Hz
+
+light:
+  - platform: monochromatic
+    id: backlight
+    name: "${friendly_name} Backlight"
+    output: bl_pwm
+    restore_mode: RESTORE_AND_ON
+

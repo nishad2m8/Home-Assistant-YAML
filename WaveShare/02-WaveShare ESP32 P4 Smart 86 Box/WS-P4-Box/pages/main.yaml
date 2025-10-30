@@ -1,0 +1,382 @@
+packages:
+  weather_icons: !include weather_icons.yaml
+
+lvgl:
+  pages:
+    - id: devices_page
+      bg_color: 0x15171a
+      widgets:
+
+        # panel main
+        - obj:
+            id: panel_main
+            x: 0
+            y: 10
+            width: 680
+            height: 303
+            align: TOP_MID
+            bg_color: 0x15171a 
+            border_color: 0x2f3237
+            bg_image_src: living_room
+            bg_image_opa: 50%
+            clip_corner: true
+
+        # label time
+        - label:
+            id: label_time
+            align: TOP_RIGHT
+            x: 0
+            y: -20
+            width: 470
+            text_align: CENTER
+            text: "10:10"
+            text_color: 0xffffff
+            text_font: saira_light_150
+
+        # label date
+        - label:
+            id: label_date
+            align: TOP_RIGHT
+            x: 0
+            y: 170
+            width: 470
+            text_align: CENTER
+            text: "22-Aug-25"
+            text_color: 0xffffff
+            text_font: saira_light_50
+
+        # panel weather
+        - obj:
+            id: panel_weather
+            x: 20
+            y: 339
+            width: 534
+            height: 170
+            clickable: false
+            bg_color: 0x2f3237
+            border_color: 0x2f3237
+            widgets:
+              - label:
+                  id: label_condition
+                  x: 111
+                  y: 10
+                  text: "Sunny"
+                  text_color: 0xFFFFFF
+                  text_font: saira_light_50
+
+              - label:
+                  id: label_temp
+                  x: 318
+                  y: 10
+                  width: 172
+                  text: "37.2 °C"
+                  text_color: 0xFFFFFF
+                  text_font: saira_light_50
+                  text_align: right
+
+              - label:
+                  id: label_humidity
+                  x: 363
+                  y: 78
+                  width: 127
+                  text: "50%"
+                  text_color: 0xFFFFFF
+                  text_font: saira_light_35
+                  text_align: right
+
+              - label:
+                  id: label_feelslike
+                  x: 111
+                  y: 78
+                  width: 161
+                  text: "FL: 32°C"
+                  text_color: 0xFFFFFF
+                  text_font: saira_light_35
+                  text_align: left
+
+        # slider light
+        - slider:
+            id: slider_light
+            x: 572
+            y: 339
+            width: 128
+            height: 356
+            value: 25
+            clickable: true
+            # Main part styling (background)
+            bg_color: 0xffff00
+            radius: 10
+            pad_all: 5
+            # Indicator part styling (the filled portion)
+            indicator:
+              bg_color: 0xffff00
+              radius: 10
+            # Knob part styling (the draggable knob)
+            knob:
+              bg_color: 0x6f6e12
+              pad_top: -70
+              pad_bottom: -50
+              pad_left: -20
+              pad_right: -20
+
+
+        # Fixed switch (fan) configuration - LVGL Widget Definition
+        - switch:
+            id: switch_fan
+            x: 20
+            y: 525
+            width: 258
+            height: 170
+            bg_color: 0x2f3237
+            # Main part styling (background track)
+            radius: 10
+            # Knob part styling (the movable knob)
+            knob:
+              radius: 10
+              pad_top: -8
+              pad_bottom: -8
+              pad_left: -8
+              pad_right: -8
+              bg_image_src: fan
+              bg_image_opa: 39%  # 100/255 * 100% ≈ 39%
+              checked:
+                bg_image_src: fan
+                bg_image_opa: 100%  # Full opacity when checked
+                bg_image_recolor: 0x2be825
+                bg_image_recolor_opa: 100%  # Full recolor opacity when checked
+            # Indicator part styling (the filled portion when ON)
+            indicator:
+              radius: 10
+              pad_top: -8
+              checked:
+                bg_color: 0x2be825
+
+        # Fixed switch (tv) configuration - LVGL Widget Definition  
+        - switch:
+            id: switch_vacuum_cleaner
+            x: 296
+            y: 525
+            width: 258
+            height: 170
+            bg_color: 0x2f3237
+            # Main part styling (background track)
+            radius: 10
+            # Knob part styling (the movable knob)
+            knob:
+              radius: 10
+              pad_top: -8
+              pad_bottom: -8
+              pad_left: -8
+              pad_right: -8
+              bg_image_src: vacuum_cleaner
+              bg_image_opa: 39%
+              checked:
+                bg_image_src: vacuum_cleaner
+                bg_image_opa: 100%
+                bg_image_recolor: 0x2be825
+                bg_image_recolor_opa: 100%
+            # Indicator part styling (the filled portion when ON)
+            indicator:
+              radius: 10
+              pad_top: -8
+              pad_bottom: -8
+              pad_left: -8
+              pad_right: -8
+              checked:
+                bg_color: 0x2be825
+
+        # Weather icon
+        - image:
+            id: weather_icon
+            x: -275
+            y: 51
+            src: cloudy   # default image shown at startup
+            align: CENTER
+
+                
+font:
+  - file:
+      type: gfonts
+      family: Saira
+      weight: light  # or weight: 300
+    id: saira_light_50
+    size: 50
+    bpp: 8
+
+  - file:
+      type: gfonts
+      family: Saira
+      weight: light  # or weight: 300
+    id: saira_light_35
+    size: 35
+    bpp: 8
+
+  - file:
+      type: gfonts
+      family: Saira
+      weight: light  # or weight: 300
+    id: saira_light_150
+    size: 150
+    bpp: 8
+
+image:   
+    - file: 'WS-P4-Box/pages/Assets/living_room.png'
+      id: living_room
+      type: rgb565
+      resize: 680x303
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/fan.png'
+      id: fan
+      type: rgb565
+      resize: 64x64
+      transparency: alpha_channel
+      byte_order: little_endian
+
+    - file: 'WS-P4-Box/pages/Assets/vacuum_cleaner.png'
+      id: vacuum_cleaner
+      type: rgb565
+      resize: 64x64
+      transparency: alpha_channel
+      byte_order: little_endian
+
+# ESPHome Switch Components
+switch:
+  - platform: lvgl
+    widget: switch_fan
+    name: "Fan Switch"
+
+  - platform: lvgl
+    widget: switch_vacuum_cleaner
+    name: "Vacuum Cleaner Switch"
+
+number:
+  - platform: lvgl
+    widget: slider_light
+    name: "Light Slider"
+
+# Time using sntp not associated with Home Assistant
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: Asia/Bahrain  # Your timezone
+    servers:
+      - pool.ntp.org
+    on_time:
+      # Update time every minute
+      - seconds: 0
+        then:
+          - lvgl.label.update:
+              id: label_time
+              text: !lambda |-
+                auto time = id(sntp_time).now();
+                return time.strftime("%I:%M");
+          - lvgl.label.update:
+              id: label_date
+              text: !lambda |-
+                auto time = id(sntp_time).now();
+                return time.strftime("%d-%b-%y");
+
+# Home Assistant OpenWeatherMap Sensors
+text_sensor:
+  - platform: homeassistant
+    id: weather_condition
+    entity_id: sensor.openweathermap_condition
+    on_value:
+      - lvgl.label.update:
+          id: label_condition
+          text: !lambda 'return x;'
+
+      # Update weather icon based on condition
+      - lvgl.image.update:
+          id: weather_icon
+          src: !lambda |-
+            std::string condition = x;
+            std::transform(condition.begin(), condition.end(), condition.begin(), ::tolower);
+
+            if (condition == "sunny" || condition == "clear") {
+              return id(sunny);
+            } else if (condition == "clear-night") {
+              return id(clear_night);
+            } else if (condition == "cloudy") {
+              return id(cloudy);
+            } else if (condition == "partlycloudy" || condition == "partly-cloudy") {
+              return id(partly_cloudy);
+            } else if (condition == "partly-cloudy-night") {
+              return id(partly_cloudy_night);
+            } else if (condition == "mostly-cloudy-day") {
+              return id(mostly_cloudy_day);
+            } else if (condition == "mostly-cloudy-night") {
+              return id(mostly_cloudy_night);
+            } else if (condition == "mostly-sunny") {
+              return id(mostly_sunny);
+            } else if (condition == "drizzle") {
+              return id(drizzle);
+            } else if (condition == "rainy" || condition == "rain" || condition == "showers") {
+              return id(showers_rain);
+            } else if (condition == "scattered-showers-day") {
+              return id(scattered_showers_day);
+            } else if (condition == "scattered-showers-night") {
+              return id(scattered_showers_night);
+            } else if (condition == "heavy-rain" || condition == "pouring") {
+              return id(heavy_rain);
+            } else if (condition == "snowy" || condition == "snow") {
+              return id(heavy_snow);
+            } else if (condition == "snow-showers") {
+              return id(snow_showers_snow);
+            } else if (condition == "blizzard") {
+              return id(blizzard);
+            } else if (condition == "flurries") {
+              return id(flurries);
+            } else if (condition == "sleet" || condition == "hail") {
+              return id(sleet_hail);
+            } else if (condition == "wintry-mix") {
+              return id(wintry_mix_rain_snow);
+            } else if (condition == "tstorm" || condition == "thunderstorm") {
+              return id(strong_tstorms);
+            } else if (condition == "isolated-tstorms-day") {
+              return id(isolated_scattered_tstorms_day);
+            } else if (condition == "isolated-tstorms-night") {
+              return id(isolated_scattered_tstorms_night);
+            } else if (condition == "fog" || condition == "haze" || condition == "smoke" || condition == "dust") {
+              return id(haze_fog_dust_smoke);
+            } else if (condition == "tornado") {
+              return id(tornado);
+            } else {
+              return id(cloudy);   # default fallback
+            }
+
+sensor: 
+  # Home Assistant Temperature Sensor
+  - platform: homeassistant
+    id: weather_temperature
+    entity_id: sensor.openweathermap_temperature
+    on_value:
+      - lvgl.label.update:
+          id: label_temp
+          text: !lambda |-
+            // Update the temperature label with the rounded temperature value in Celsius
+            return (std::to_string((int)round(x)) + " °C");
+
+  # Home Assistant Feels Like Temperature Sensor
+  - platform: homeassistant
+    id: weather_feels_like
+    entity_id: sensor.openweathermap_feels_like_temperature
+    on_value:
+      - lvgl.label.update:
+          id: label_feelslike
+          text: !lambda |-
+            // Update the feels like temperature label with the rounded value in Celsius
+            return ("FL: " + std::to_string((int)round(x)) + "°C");
+
+  # Home Assistant Humidity Sensor
+  - platform: homeassistant
+    id: weather_humidity
+    entity_id: sensor.openweathermap_humidity
+    on_value:
+      - lvgl.label.update:
+          id: label_humidity
+          text: !lambda |-
+            // Update the humidity label with the rounded humidity value in percentage
+            return (std::to_string((int)round(x)) + "%");

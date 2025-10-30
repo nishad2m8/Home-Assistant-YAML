@@ -1,0 +1,210 @@
+# Waveshare Speaker Box
+# MIC (I2S IN):  WS/LRCLK=GPIO2,  BCLK=GPIO15, DIN=GPIO39 (RIGHT channel)
+# DAC (I2S OUT): WS/LRCLK=GPIO38, BCLK=GPIO48, DOUT=GPIO47 (PCM5101, no MCLK)
+
+# I²S buses
+i2s_audio:
+  # Mic (input)
+  - id: audio_bus_in
+    i2s_lrclk_pin: GPIO2     # WS/LRCLK
+    i2s_bclk_pin: GPIO15     # BCLK
+  # DAC (output)
+  - id: audio_bus_out
+    i2s_lrclk_pin: GPIO38    # WS/LRCLK
+    i2s_bclk_pin: GPIO48     # BCLK
+
+# Microphone (INMP441 / equivalent on this board)
+microphone:
+  - platform: i2s_audio
+    id: esp32_microphone
+    i2s_audio_id: audio_bus_in
+    adc_type: external
+    i2s_din_pin: GPIO39
+    channel: right
+    sample_rate: 16000
+    bits_per_sample: 32bit
+    # on_data:
+    #   - logger.log:
+    #       level: DEBUG
+    #       format: "Mic chunk: %d bytes"
+    #       args: [x.size()]
+
+# Speakers (I²S DAC -> mixer -> two resamplers)
+speaker:
+  # Physical DAC (PCM5101/PCM5102A; no MCLK)
+  - platform: i2s_audio
+    id: esp32_speaker
+    i2s_audio_id: audio_bus_out
+    i2s_dout_pin: GPIO47
+    dac_type: external
+    channel: mono
+    sample_rate: 48000
+    bits_per_sample: 16bit
+    buffer_duration: 100ms
+    i2s_comm_fmt: stand_i2s
+
+  # Mix two logical inputs to the single DAC
+  - platform: mixer
+    id: audio_mixer
+    output_speaker: esp32_speaker
+    source_speakers:
+      - id: announcement_mixing_input
+        timeout: never
+      - id: media_mixing_input
+        timeout: never
+    # num_channels, buffer_duration, etc. inherit sane defaults
+
+  # Ensure both logical inputs are 48 kHz / 16-bit
+  - platform: resampler
+    id: announcement_resampling_speaker
+    output_speaker: announcement_mixing_input
+    sample_rate: 48000
+    bits_per_sample: 16
+
+  - platform: resampler
+    id: media_resampling_speaker
+    output_speaker: media_mixing_input
+    sample_rate: 48000
+    bits_per_sample: 16
+
+# Media player (drives the two pipelines)
+media_player:
+  - platform: speaker
+    name: "WS Speaker Box Media Player"
+    id: speaker_media_player
+    codec_support_enabled: true
+    volume_min: 50%
+    volume_max: 100%
+    volume_increment: 5%
+
+    announcement_pipeline:
+      speaker: announcement_resampling_speaker
+      format: FLAC
+      sample_rate: 48000
+      num_channels: 1
+
+    media_pipeline:
+      speaker: media_resampling_speaker
+      format: FLAC
+      sample_rate: 48000
+      num_channels: 1
+
+    # Before playing an announcement (TTS/alerts)
+    on_announcement:
+      - if:
+          condition:
+            microphone.is_capturing:
+          then:
+            - micro_wake_word.stop:
+            - voice_assistant.stop:
+      - mixer_speaker.apply_ducking: 
+          id: media_mixing_input    
+          decibel_reduction: 20
+          duration: 0s
+      - delay: 100ms
+
+    # Clear ducking when nothing is playing/announcing
+    on_state:
+      - if:
+          condition:
+            and:
+              - not: voice_assistant.is_running
+              - not: media_player.is_announcing
+          then:
+            - mixer_speaker.apply_ducking:
+                id: media_mixing_input
+                decibel_reduction: 0
+                duration: 1s
+
+    # Any non-announcement playback starts
+    on_play:
+      - logger.log:
+          tag: main
+          level: DEBUG
+          format: "Media player started playing, disabling microphone"
+      - delay: 100ms
+      - micro_wake_word.stop:
+      - voice_assistant.stop:
+
+    # Playback finished / idle
+    on_idle:
+      - delay: 100ms
+      - if:
+          condition:
+            not: voice_assistant.is_running
+          then:
+            - micro_wake_word.start:
+
+# STATUS / VA PIPELINE
+sensor:
+  - platform: template
+    name: "Voice Assistant State"
+    update_interval: 2s
+    lambda: |-
+      return id(esp32_microphone).is_running() ? 1 : 0;
+
+text_sensor:
+  - platform: template
+    name: "Voice Assistant Status"
+    id: voice_status
+    update_interval: 5s
+    lambda: |-
+      if (id(esp32_microphone).is_running()) {
+        return {"Listening"};
+      } else {
+        return {"Idle"};
+      }
+
+# Wake word
+micro_wake_word:
+  id: my_wake_word
+  models:
+    - model: alexa
+  on_wake_word_detected:
+    then:
+      - logger.log: "Wake word detected"
+      - micro_wake_word.stop
+      - voice_assistant.start:
+          wake_word: !lambda return wake_word;
+
+# Voice Assistant pipeline (mic in, media player out)
+voice_assistant:
+  microphone: esp32_microphone
+  media_player: speaker_media_player
+  micro_wake_word: my_wake_word
+  noise_suppression_level: 0
+  auto_gain: 15dBFS
+  volume_multiplier: 2.0
+  conversation_timeout: 300s
+
+  on_start:
+    - logger.log: "VA started"
+
+  on_stt_end:
+    - logger.log:
+        format: "You said: %s"
+        args: [x]
+
+  on_error:
+    - logger.log:
+        level: ERROR
+        format: "VA error %d: %s"
+        args: [code, message]
+    - micro_wake_word.start:
+
+  on_end:
+    - wait_until:
+        condition: media_player.is_announcing
+        timeout: 0.5s
+    - wait_until:
+        condition:
+          and:
+            - not: media_player.is_announcing
+            - not: media_player.is_playing
+    - micro_wake_word.start:
+
+  on_client_connected:
+    - micro_wake_word.start:
+  on_client_disconnected:
+    - micro_wake_word.stop:
+
